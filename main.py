@@ -22,7 +22,7 @@ async def shutdown_db():
 
 # Validate player name and score input
 class PlayerScore(BaseModel):
-    player_name: constr = Field(strict=True, min_length=1, max_length=50, regex=r"^[a-zA-Z0-9_ ]+$")  # Alphanumeric only
+    player_name: constr(min_length=1, max_length=50, pattern=r"^[a-zA-Z0-9_ ]+$")
     score: int
 
 # Sanitize file names to reduce injection risks
