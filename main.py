@@ -32,6 +32,13 @@ def sanitize_input(input_str: str) -> str:
 
 @app.post("/upload_sprite/")
 async def upload_sprite(file: UploadFile = File(...)):
+    '''
+    enpoint to upload sprite files
+    - encodes the file in base64
+    - saves it to the database, using the file name, encoded data, and a description in the 'sprites' collection
+    - returns a message and the id of the inserted document
+    '''
+
     try:
         db = get_db()
         content = await file.read()
@@ -52,6 +59,12 @@ async def upload_sprite(file: UploadFile = File(...)):
 
 @app.post("/upload_audio/")
 async def upload_audio(file: UploadFile = File(...)):
+    '''
+    enpoint to upload audio files
+    - encodes the file in base64
+    - saves it to the database, using the file name, encoded data, and a description in the 'audio' collection
+    - returns a message and the id of the inserted document
+    '''
     try:
         db = get_db()
         content = await file.read()
@@ -72,6 +85,12 @@ async def upload_audio(file: UploadFile = File(...)):
 
 @app.post("/player_score")
 async def add_score(score: PlayerScore):
+    '''
+    enpoint to player score files
+    - validates the player name and score using the PlayerScore model
+    - saves it to the database, using the player name and score in the 'scores' collection
+    - returns a message and the id of the inserted document
+    '''
     try:
         db = get_db()
         score_doc = score.dict()
