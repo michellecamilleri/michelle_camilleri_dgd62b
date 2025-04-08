@@ -12,7 +12,7 @@ app = FastAPI()
 # Connect to Mongo Atlas
 MONGODB_CONNECTION_STRING = os.getenv("MONGODB_CONNECTION_STRING")
 client = AsyncIOMotorClient(MONGODB_CONNECTION_STRING)
-db = client.multimedia_db
+db = client["multimedia_db"]
 
 class PlayerScore(BaseModel):
     player_name: str
