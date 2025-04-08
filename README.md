@@ -31,7 +31,7 @@ Created the API using FastAPI
 - Created a file called main.py
 - Appended code from Appendix B
 - Launch the FastAPI
-by using	'uvicorn main:app –reload '
+by using	'uvicorn main:app –reload'
 - Ensured the server was running by checking it's accessible through 'http://127.0.0.1:8000/docs'
 
 

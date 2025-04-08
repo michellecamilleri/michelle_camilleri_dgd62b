@@ -1,30 +1,50 @@
-from fastapi import FastAPI, File, UploadFile, HTTPException
+from fastapi import FastAPI, UploadFile, File, HTTPException
 from pydantic import BaseModel
-import motor.motor_asyncio
+from motor.motor_asyncio import AsyncIOMotorClient
+import base64
+import os
+from dotenv import load_dotenv
 
+load_dotenv()
 app = FastAPI()
 
+
 # Connect to Mongo Atlas
-client = motor.motor_asyncio.AsyncIOMotorClient("your_mongo_connection_string")
+MONGODB_CONNECTION_STRING = os.getenv("MONGODB_CONNECTION_STRING")
+client = AsyncIOMotorClient(MONGODB_CONNECTION_STRING)
 db = client.multimedia_db
 
 class PlayerScore(BaseModel):
     player_name: str
     score: int
 
-@app.post("/upload_sprite")
+@app.post("/upload_sprite/")
 async def upload_sprite(file: UploadFile = File(...)):
     content = await file.read()
-    sprite_doc = {"filename": file.filename, "content": content}
+    encoded = base64.b64encode(content).decode("utf-8")
+
+    sprite_doc = {
+        "file_name": file.filename,
+        "file_data": encoded,
+        "description": "Sprite uploaded via Base64"
+    }
+
     result = await db.sprites.insert_one(sprite_doc)
     return {"message": "Sprite uploaded", "id": str(result.inserted_id)}
 
-@app.post("/upload_audio")
+@app.post("/upload_audio/")
 async def upload_audio(file: UploadFile = File(...)):
     content = await file.read()
-    audio_doc = {"filename": file.filename, "content": content}
+    encoded = base64.b64encode(content).decode("utf-8")
+
+    audio_doc = {
+        "file_name": file.filename,
+        "file_name": encoded,
+        "description": "Audio uploaded via Base64"
+    }
+
     result = await db.audio.insert_one(audio_doc)
-    return {"message": "Audio file uploaded", "id": str(result.inserted_id)}
+    return {"message": "Audio uploaded", "id": str(result.inserted_id)}
 
 @app.post("/player_score")
 async def add_score(score: PlayerScore):
