@@ -6,7 +6,7 @@ import os
 import re
 from dotenv import load_dotenv
 
-
+# Loading connection string from the .env file 
 load_dotenv()
 app = FastAPI()
 
